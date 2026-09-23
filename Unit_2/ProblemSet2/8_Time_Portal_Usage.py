@@ -40,16 +40,34 @@ def display_time_portal_usage(usage_records):
     ans = []
     temp = ['Portal']
     times = set()
+    uniqportals = set()
     portals = {}
     for i in range(n):
-        times.add(usage_records[2])
-        portals[usage_records[1]] = portals.get(usage_records[1],0) + 1
-    list1 = list(times)
-    temp.append(list1)
+        p = usage_records[i][1]
+        time = usage_records[i][2]
+        times.add(time)
+        uniqportals.add(p)
+        if p not in portals:
+            portals[p] = {} # new hashmap for [time:count] mapping
+        if time not in portals[p]:
+            portals[p][time] = 0
+        portals[p][time]+=1
+    t = sorted(list(times))
+    up = sorted(uniqportals, key=lambda name: int(name))
+
+    temp.extend(t)
     ans.append(temp)
-    for i in range(len(portals)):
-        row = []
-        row.append(portals[i])
+    # print(up)
+    for key in up:
+        temp = []
+        temp.append(key)
+        for curr in t:
+            if curr not in portals[key]:
+                temp.append(0)
+            else:
+                temp.append(portals[key][curr])
+        ans.append(temp)
+    return ans
 
     
 
